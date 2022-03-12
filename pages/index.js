@@ -56,6 +56,6 @@ export default function Home() {
       {selectedImages.length > 0 && <div className={styles.btn}>
         <button onClick={onUpload}>Upload to Cloudinary</button>
       </div>}
-    </div>
+    </div> 
   )
 }
