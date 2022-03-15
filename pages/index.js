@@ -1,5 +1,5 @@
-import { useCallback, useState, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { useCallback, useState, useMemo } from 'react'
 import axios from 'axios'
 import styles from '../styles/Home.module.css'
 
@@ -16,7 +16,8 @@ export default function Home() {
     })
   }, [])
 
-  const {getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject} = useDropzone({onDrop/* ,accept: 'image/jpeg' */,maxFiles:2})
+  const {getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject} = useDropzone({onDrop, accept: 'image/png', maxFiles:2})
+  console.log(getInputProps())
 
   const onUpload = () => {
     (async function uploadImage() {
@@ -34,10 +35,7 @@ export default function Home() {
   const style = useMemo(() => ({
     ...(isDragAccept ? {borderColor: '#00e676'} : {}),
     ...(isDragReject ? {borderColor: '#ff1744'} : {})
-  }), [
-    isDragAccept,
-    isDragReject
-  ]);
+  }), [isDragAccept, isDragReject]);
 
   return (
     <div className={styles.container}>
