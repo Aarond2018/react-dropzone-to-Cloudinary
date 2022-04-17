@@ -1,59 +1,71 @@
-import { useDropzone } from 'react-dropzone'
-import { useCallback, useState, useMemo } from 'react'
-import axios from 'axios'
-import styles from '../styles/Home.module.css'
+import { useDropzone } from "react-dropzone";
+import { useCallback, useState, useMemo } from "react";
+import axios from "axios";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const [selectedImages, setSelectedImages] = useState([])
+	const [selectedImages, setSelectedImages] = useState([]);
 
-  const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
-    acceptedFiles.forEach(file => {
-      const reader = new FileReader()
-      reader.onload = e => {
-        setSelectedImages(prevState => [...prevState, e.target.result])
-      }
-      reader.readAsDataURL(file)
-    })
-  }, [])
+	const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+		acceptedFiles.forEach((file) => {
+			setSelectedImages((prevState) => [...prevState, file]);
+		});
+	}, []);
 
-  const {getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject} = useDropzone({onDrop, accept: 'image/png', maxFiles:2})
-  console.log(getInputProps())
+	const {
+		getRootProps,
+		getInputProps,
+		isDragActive,
+		isDragAccept,
+		isDragReject,
+	} = useDropzone({ onDrop, accept: "image/png", maxFiles: 5 });
 
-  const onUpload = () => {
-    (async function uploadImage() {
-      try {
-        const response = await axios.post("/api/upload", {
-          images: JSON.stringify(selectedImages)
-        });
-        console.log(response)
-      } catch (error) {
-        console.log("imageUpload" + error);
-      }
-    })();
-  }
+	const onUpload = () => {
+		(async function uploadImage() {
+			const formData = new FormData();
 
-  const style = useMemo(() => ({
-    ...(isDragAccept ? {borderColor: '#00e676'} : {}),
-    ...(isDragReject ? {borderColor: '#ff1744'} : {})
-  }), [isDragAccept, isDragReject]);
+			selectedImages.forEach((image) => {
+				formData.append("file", image);
+			});
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.dropzone} {...getRootProps({style})}>
-        <input {...getInputProps()} />
-        { isDragActive ?
-          <p>Drop file(s) here ...</p> :
-          <p>Drag and drop file(s) here, or click to select files</p>
-      }
-      </div>
-      <div className={styles.images}>
-        {selectedImages.length > 0 && selectedImages.map((image, index) => (
-          <img src={image} key={index} />
-        ))}
-      </div>
-      {selectedImages.length > 0 && <div className={styles.btn}>
-        <button onClick={onUpload}>Upload to Cloudinary</button>
-      </div>}
-    </div> 
-  )
+			try {
+				const response = await axios.post("/api/upload", formData);
+				console.log(response.data);
+			} catch (error) {
+				console.log("imageUpload" + error);
+			}
+		})();
+	};
+
+	const style = useMemo(
+		() => ({
+			...(isDragAccept ? { borderColor: "#00e676" } : {}),
+			...(isDragReject ? { borderColor: "#ff1744" } : {}),
+		}),
+		[isDragAccept, isDragReject]
+	);
+
+	return (
+		<div className={styles.container}>
+			<div className={styles.dropzone} {...getRootProps({ style })}>
+				<input {...getInputProps()} />
+				{isDragActive ? (
+					<p>Drop file(s) here ...</p>
+				) : (
+					<p>Drag and drop file(s) here, or click to select files</p>
+				)}
+			</div>
+			<div className={styles.images}>
+				{selectedImages.length > 0 &&
+					selectedImages.map((image, index) => (
+						<img src={`${URL.createObjectURL(image)}`} key={index} alt="" />
+					))}
+			</div>
+			{selectedImages.length > 0 && (
+				<div className={styles.btn}>
+					<button onClick={onUpload}>Upload to Cloudinary</button>
+				</div>
+			)}
+		</div>
+	);
 }
