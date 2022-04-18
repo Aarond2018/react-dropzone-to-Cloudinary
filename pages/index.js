@@ -31,7 +31,7 @@ export default function Home() {
 			});
 
 			try {
-				const response = await axios.post("/api/upload", formData);
+				const response = await axios.post("https://react-dropzone-to-cloudinary.vercel.app/api/upload", formData);
 				console.log(response.data);
         setUploadStatus("Upload successful")
 			} catch (error) {
@@ -56,7 +56,7 @@ export default function Home() {
 				{isDragActive ? (
 					<p>Drop file(s) here ...</p>
 				) : (
-					<p>Drag and drop file(s) here, or click to select files</p>
+					<p>Drag and drop file(s) here, or click to select files.</p>
 				)}
 			</div>
 			<div className={styles.images}>

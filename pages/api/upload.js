@@ -12,6 +12,10 @@ cloudinary.config({
 	secure: true,
 });
 
+const cors = Cors({
+  methods: ['GET', 'HEAD', 'POST'],
+})
+
 function runMiddleware(req, res, fn) {
 	return new Promise((resolve, reject) => {
 		fn(req, res, (result) => {
@@ -24,6 +28,7 @@ function runMiddleware(req, res, fn) {
 }
 
 export default async function handler(req, res) {
+	await runMiddleware(req, res, cors)
 	await runMiddleware(req, res, myUploadMiddleware);
 
 	for (const file of req.files) {
