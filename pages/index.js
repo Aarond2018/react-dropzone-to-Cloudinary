@@ -19,7 +19,7 @@ export default function Home() {
 		isDragActive,
 		isDragAccept,
 		isDragReject,
-	} = useDropzone({ onDrop, accept: "image/jpeg", maxFiles: 5 });
+	} = useDropzone({ onDrop/* , accept: "image/jpeg", maxFiles: 5 */ });
 
 	const onUpload = () => {
 		(async function uploadImage() {
@@ -33,7 +33,7 @@ export default function Home() {
 			try {
 				const response = await axios.post("/api/upload", formData);
 				console.log(response.data);
-        setUploadStatus("uploaded")
+        setUploadStatus("Upload successful")
 			} catch (error) {
 				console.log("imageUpload" + error);
         setUploadStatus("Upload failed..")
