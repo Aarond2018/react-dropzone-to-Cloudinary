@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 
 export default function Home() {
 	const [selectedImages, setSelectedImages] = useState([]);
+  const [uploadStatus, setUploadStatus] = useState("")
 
 	const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
 		acceptedFiles.forEach((file) => {
@@ -18,10 +19,11 @@ export default function Home() {
 		isDragActive,
 		isDragAccept,
 		isDragReject,
-	} = useDropzone({ onDrop, accept: "image/png", maxFiles: 5 });
+	} = useDropzone({ onDrop, accept: "image/jpeg", maxFiles: 5 });
 
 	const onUpload = () => {
 		(async function uploadImage() {
+      setUploadStatus("Uploading....")
 			const formData = new FormData();
 
 			selectedImages.forEach((image) => {
@@ -31,8 +33,10 @@ export default function Home() {
 			try {
 				const response = await axios.post("/api/upload", formData);
 				console.log(response.data);
+        setUploadStatus("uploaded")
 			} catch (error) {
 				console.log("imageUpload" + error);
+        setUploadStatus("Upload failed..")
 			}
 		})();
 	};
@@ -64,6 +68,7 @@ export default function Home() {
 			{selectedImages.length > 0 && (
 				<div className={styles.btn}>
 					<button onClick={onUpload}>Upload to Cloudinary</button>
+          <p>{uploadStatus}</p>
 				</div>
 			)}
 		</div>

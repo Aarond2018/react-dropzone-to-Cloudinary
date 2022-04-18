@@ -34,15 +34,21 @@
 .btn {  
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .btn button{
   padding: 0.5rem 1rem;
   border: 1px solid #36e436;
   background: #fff;
-  margin: 2rem 0;
+  margin-top: 2rem;
   font-size: 1rem;
   font-weight: 700;
   color: #333;
   cursor: pointer;
+}
+
+.btn > p {
+  font-style: italic;
 }
