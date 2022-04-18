@@ -1,4 +1,5 @@
 import multer from "multer";
+import Cors from 'cors'
 const cloudinary = require("cloudinary").v2;
 
 const storage = multer.memoryStorage();
